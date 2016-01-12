@@ -1,55 +1,50 @@
-var BurstLine = function() { 
-	
-    var l = {
+var BurstLine = BaseView.extend({
+    
+    //----------------------------------------
+    // VARIABLES
+    //----------------------------------------
 
-    	//----------------------------------------
-        // VARIABLES
-        //----------------------------------------
+    guide: false,
+    progress: 0,
+    properties: [],
 
-        
+    x1: 0,
+    x2: 0,
+    y1: 0,
+    y2: 0,
 
-        //----------------------------------------
-        // PUBLIC METHODS
-        //----------------------------------------
+    thickness: 1,
+    color: 0xFFFFFF,
+    opacity: 1,
 
-    	init: function() {
-    		
-            this.bind();
+    //----------------------------------------
+    // PUBLIC METHODS
+    //----------------------------------------
 
-    		_.bindAll(this, 'init', 'addListeners', 'removeListeners', 'onUpdate');
+	init: function() {
+		
+        this.bind();
 
-            AnimationFrame.init();
+		_.bindAll(this, 'init', 'update', 'drawTo');
 
-            this.addListeners();
-    	},
+        AnimationFrame.init();
 
-        //----------------------------------------
-        // PRIVATE METHODS
-        //----------------------------------------
+        this.properties = this.options.props;
+        this.guide = this.options.guide;
 
-        addListeners: function()
-        {
+        this.addListeners();
+	},
 
-            AnimationFrame.addListener(this.onUpdate);
-        },
+    update: function(progress)
+    {
+        this.progress = progress;
+    },
 
-        removeListeners: function()
-        {
+    drawTo: function(graphics)
+    {
+        graphics.lineStyle(this.thickness, this.color, this.opacity);
+        graphics.moveTo(this.x1, this.y1);
+        graphics.lineTo(this.x2, this.y2);
+    }
 
-            AnimationFrame.removeListener(this.onUpdate);
-        },
-
-        //----------------------------------------
-        // EVENT HANDLERS
-        //----------------------------------------
-
-        onUpdate: function() {
-
-            
-        }
-    };
-
-    l.init();
-
-    return l;
-}
+});

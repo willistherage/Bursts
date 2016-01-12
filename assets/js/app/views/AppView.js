@@ -28,18 +28,9 @@ var BurstAppView = BaseView.extend({
         
         this.$container.append(this.renderer.view);
 
-        this.graphics = new PIXI.Graphics();
-        this.graphics.beginFill(0xFF3300);
-        this.graphics.lineStyle(10, 0xffd900, 1);
-        this.graphics.moveTo(50,50);
-        this.graphics.lineTo(250, 50);
-        this.graphics.lineTo(100, 100);
-        this.graphics.lineTo(250, 220);
-        this.graphics.lineTo(50, 220);
-        this.graphics.lineTo(50, 50);
-        this.graphics.endFill();
-
-        this.stage.addChild(this.graphics);
+        this.burst = new Burst();
+        this.burst.init();
+        this.burst.build(this.stage, 8);
 
         AnimationFrame.init();
         AnimationFrame.addListener(this.onUpdate);
@@ -64,6 +55,6 @@ var BurstAppView = BaseView.extend({
     },
 
     onResize: function() {
-        
+
     }
 });

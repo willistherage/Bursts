@@ -4,17 +4,40 @@ var BurstLine = BaseView.extend({
     // VARIABLES
     //----------------------------------------
 
+    // If the line is a guide it will be rendered below everything else and can be easily be flagged to be hidden.
     guide: false,
+
+    // Progress of the animation.
     progress: 0,
+
+    // The keyframes of the line animations.
+    keyframes: [],
+
+    // The properties of each keyframe.
     properties: [],
 
+    // The current state of the stroke start value. 0 - 100
+    start: 0,
+
+    // The current state of the stroke end value. 100 - 0
+    end: 0,
+
+    // The current state of hte stroke offset that shifts the start and end values along the stroke. -100 - 100
+    offset: 0,
+
+    // The x and y values of the stroke. Soon to be deprecated.
     x1: 0,
     x2: 0,
     y1: 0,
     y2: 0,
 
+    // The thickness of the stoke.
     thickness: 1,
+
+    // The color of the stroke.
     color: 0xFFFFFF,
+
+    // The opacity of the stroke.
     opacity: 0.5,
 
     //----------------------------------------

@@ -14,6 +14,10 @@ var Burst = BaseView.extend({
     turbulence: 0,
     bursts:[],
 
+    //
+    progress: 0,
+    duration: 1,
+
     //----------------------------------------
     // PUBLIC METHODS
     //----------------------------------------

@@ -70,6 +70,9 @@ var MathUtils = {
 		return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
 	},
 
+	/**
+	 *	Calculates the distance between two sets of coordinates
+	 */
 	hypotenuse: function(a, b)
 	{
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));

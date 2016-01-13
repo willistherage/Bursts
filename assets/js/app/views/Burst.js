@@ -6,8 +6,8 @@ var Burst = BaseView.extend({
 
     stage: null,
     graphics: null,
-    burstType: null,
-    burstAreaType: 200,
+    burstType: BurstType.SPARK,
+    burstAreaType: BurstType.SQUARE,
     burstAreaSize: 200,
     lineCount: 8,
     showGuides: true,
@@ -22,9 +22,7 @@ var Burst = BaseView.extend({
 		
         this.bind();
 
-		_.bindAll(this, 'init', 'addListeners', 'removeListeners', 'createBlast', 'createSpark', 'onUpdate');
-
-        AnimationFrame.init();
+		_.bindAll(this, 'init', 'addListeners', 'removeListeners', 'createBlast', 'createSpark', 'solveForX', 'solveForY', 'onUpdate');
 
         this.addListeners();
 	},
@@ -68,15 +66,7 @@ var Burst = BaseView.extend({
 
     createBlast: function()
     {
-        this.graphics.beginFill(0xFF3300);
-        this.graphics.lineStyle(3, 0x00ff66, 1);
-        this.graphics.moveTo(50,50);
-        this.graphics.lineTo(250, 50);
-        this.graphics.lineTo(100, 100);
-        this.graphics.lineTo(120, 220);
-        this.graphics.lineTo(400, 220);
-        this.graphics.lineTo(50, 50);
-        this.graphics.endFill();
+        
     },
 
     createSpark: function()
@@ -107,35 +97,90 @@ var Burst = BaseView.extend({
             var eighth = Math.floor(innerAngle / 45);
             var eighthAngle = innerAngle % 45;
             
-            var gx1 = 0;
-            var gy1 = 0;
-            
-            var gx2 = ;
-            var gy2 = 0;
-            
+            var segment = eighth - quarter * 2;
+
+            var bx, by, tx, ty = 0;
+            var t;
+
+            switch(quarter)
+            {
+                case 0:
+                    solver = (segment == 0) ? this.solveForX : this.solveForY;
+                    t = solver.call(this, length, Math.abs(eighth % 2 * 90 - quarterAngle));
+                    break;
+                case 1:
+                    solver = (segment == 0) ? this.solveForY : this.solveForX;
+                    t = solver.call(this, length, Math.abs(eighth % 2 * 90 - quarterAngle));
+                    t.y *= -1;
+                    break;
+                case 2:
+                    solver = (segment == 0) ? this.solveForX : this.solveForY;
+                    t = solver.call(this, length, Math.abs(eighth % 2 * 90 - quarterAngle));
+                    t.x *= -1;
+                    t.y *= -1;
+                    break;
+                case 3:
+                    solver = (segment == 0) ? this.solveForY : this.solveForX;
+                    t = solver.call(this, length, Math.abs(eighth % 2 * 90 - quarterAngle));
+                    t.x *= -1;
+                    break;
+
+            }
+
+            tx = t.x;
+            ty = t.y;
+
             //// Create guide
 
-            var guideProp = new BurstProps({x1: gx1,
-                                            x2: gy1,
-                                            y1: gx2,
-                                            y2: gy2,
+            var guideProp = new BurstProps({x1: bx,
+                                            y1: by,
+                                            x2: tx,
+                                            y2: ty,
                                             color: BurstType.GUIDE_COLOR,
                                             thickness: BurstType.GUIDE_THICKNESS});
 
-            var g = new BurstLine({props: guideProp, guide: true});
-            
+            var g = new BurstLine({props: [guideProp], guide: true});
+            g.init();
+
             this.bursts.push(g);
-
-            //// Start position
-
-
-
-            //// Full extension
-
-
-
-            //// Fade out
             
+            //// Start position
+            x1 = 0;
+            y1 = 0;
+
+            x2 = 0;
+            y2 = 0;
+
+            var prop1 = new BurstProps({
+                x1: x1,
+                y1: y1,
+                x2: x2,
+                y2: y2, 
+                color: 0xFFFFFF,
+                thickness: 8
+            });
+
+            //// End position
+
+            x1 = 0;
+            y1 = 0;
+
+            x2 = t.x;
+            y2 = t.y;
+
+            var prop2 = new BurstProps({
+                x1: x1,
+                y1: y1,
+                x2: x2,
+                y2: y2, 
+                color: 0xFFFFFF,
+                thickness: 8
+            });
+
+            var b = new BurstLine({props: [guideProp], guide: true});
+            b.init();
+
+            this.bursts.push(b);
 
             // Determine animation properties
 
@@ -153,20 +198,47 @@ var Burst = BaseView.extend({
         AnimationFrame.removeListener(this.onUpdate);
     },
 
+    solveForX: function(length, angle)
+    {
+        var t = {x:0, y:length, h:0, a:angle};
+        t.x = Math.tan(MathUtils.DEGREES_TO_RADIANS * angle) * length;
+        t.h = MathUtils.hypotenuse(t.x, t.y);
+        return t;
+    },
+
+    solveForY: function(length, angle)
+    {
+        var t = {x:length, y:0, h:0, a:angle};
+        t.y = Math.tan(MathUtils.DEGREES_TO_RADIANS * angle) * length;
+        t.h = MathUtils.hypotenuse(t.x, t.y);
+        return t;
+    },
+
+    play: function()
+    {
+
+    },
+
     //----------------------------------------
     // EVENT HANDLERS
     //----------------------------------------
 
     onUpdate: function() {
 
-        var burst;
+        if(this.graphics)
+            this.graphics.clear();
 
-        for(var i = 0; i < this.bursts.length; i++)
+        if(this.bursts.length)
         {
-            burst = this.bursts[i];
-            burst.update(0);
-            burst.drawTo(this.graphics);
-        }
+            var burst;
 
+            for(var i = 0; i < this.bursts.length; i++)
+            {
+                burst = this.bursts[i];
+                burst.update(0);
+                burst.drawTo(this.graphics);
+            }
+        }
+        
     }
 });

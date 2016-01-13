@@ -19,8 +19,11 @@ var BurstAppView = BaseView.extend({
 	init: function() {
 		
         this.bind();
+        
+        _.bindAll(this, 'init', 'addListeners', 'removeListeners', 'onUpdate', 'onResize');
 
-		_.bindAll(this, 'init', 'addListeners', 'removeListeners', 'onUpdate', 'onResize');
+        // Initializing animation frame
+        AnimationFrame.init();
 
         // Grabbing reference to the container
         this.$container = $('#container');
@@ -41,9 +44,6 @@ var BurstAppView = BaseView.extend({
         this.burst = new Burst();
         this.burst.init();
         this.burst.build(this.stage, BurstType.SPARK, 4, 400);
-
-        // Initializing animation frame
-        AnimationFrame.init();
 
         this.addListeners();
 	},
@@ -72,7 +72,7 @@ var BurstAppView = BaseView.extend({
     //----------------------------------------
 
     onUpdate: function() {
-
+        
         this.renderer.render(this.stage);
     },
 

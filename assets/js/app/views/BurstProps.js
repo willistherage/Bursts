@@ -8,7 +8,8 @@ var BurstProps = function(options) {
 		y2: 0,
 		thickness: 1,
 		opacity: 1,
-		color: 0xFFFFFF
+		color: 0xFFFFFF,
+		percentage: 0
 	};
 
 	var c = $.extend(true, b, options);

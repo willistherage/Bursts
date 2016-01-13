@@ -1,5 +1,7 @@
 var MathUtils = {
 
+	DEGREES_TO_RADIANS: Math.PI / 180,
+
 	/**
 	 *	Clamps values.
 	 */

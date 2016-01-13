@@ -45,7 +45,7 @@ var AnimationFrame  = {
 
 	init: function () {
 
-		_.bindAll(this, 'addListener', 'removeListener', 'onAnimationFrame');
+		_.bindAll(this, 'init', 'addListener', 'removeListener', 'onAnimationFrame');
 		
 		var vendors = ['webkit', 'moz'];
 	    
@@ -81,7 +81,7 @@ var AnimationFrame  = {
 	//----------------------------------------
 
 	onAnimationFrame: function() {
-
+		
 		var l = this.listeners.length;
 		var time = new Date().getTime();
 		var delta = time - this.lastTime;
